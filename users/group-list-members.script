@@ -1,0 +1,4 @@
+echo "Group name to display?:"
+read -e groupName
+
+grep -Po "^$groupName.+:\K.*$" /etc/group

@@ -1,0 +1,13 @@
+echo "Please enter some input: "
+read -e userToDelete
+
+read -p "Are you sure you want to delete $userToDelete (y/n)?" CONT
+if [ "$CONT" == "y" ]; then
+  echo "Continuing with task...";
+else
+  echo "Aborting";
+  exit 1;
+fi
+
+userdel "$userToDelete"
+rm -r "/home/$userToDelete"

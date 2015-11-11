@@ -1,0 +1,16 @@
+# Create new user and make them sudo-er
+username=user1212
+password=defaultdefault
+
+sudo adduser --disabled-password --gecos "" $username
+echo $username:$password | sudo chpasswd
+sudo adduser $username sudo
+
+# Turn off root login, switch SSH port to 1000
+echo BM:Disabling root login, ssh port to 1000, and restart SSH
+sudo sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+sudo sed -i 's/Port 22/Port 1000/g' /etc/ssh/sshd_config
+sudo service ssh restart
+
+# Create SSH key
+ssh-keygen -t rsa -N "" -f /home/$username/login.key

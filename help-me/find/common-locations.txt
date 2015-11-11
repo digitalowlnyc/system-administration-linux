@@ -1,0 +1,3 @@
+/etc/ssh/sshd_config
+/etc/var/www
+/etc/apache2
