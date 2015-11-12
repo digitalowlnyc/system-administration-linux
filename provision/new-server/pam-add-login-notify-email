@@ -1,0 +1,22 @@
+# Add the following line to /etc/pam.d/ssh
+session optional pam_exec.so seteuid /etc/scripts/ssh/notify.sh
+
+# notify.sh contents:
+#!/bin/sh
+
+forkMe() {
+ip=$(ip route get 1 | awk '{print $NF;exit}')
+host=$(hostname)
+message=`env`
+subject="SSH Login: $PAM_USER from $PAM_RHOST on [$host][$ip]"
+if [ "$PAM_TYPE" != "close_session" ]; then
+curl -s --user 'api:key-da3c77baf0852536236174b98099ef5e' \
+    https://api.mailgun.net/v3/sandbox89e8091b48c040758de458e9bc979975.mailgun.org/messages \
+    -F from='BM Dev Server <mailgun@sandbox89e8091b48c040758de458e9bc979975.mailgun.org>' \
+    -F to=bryan@bluenestdigital.com \
+    -F to=bryan@bluenestdigital.com \
+    -F subject="$subject" \
+    -F text="$message"
+fi
+}
+forkMe > /dev/null 2>&1 &
